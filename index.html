@@ -49,30 +49,11 @@
       margin-bottom: 18px;
     }
 
-    ul {
-      margin-left: 20px;
-      margin-bottom: 18px;
-    }
-
-    li {
-      margin-bottom: 8px;
-    }
-
-    li::marker {
-      color: var(--accent);
-    }
-
     hr {
       border: none;
       height: 2px;
       background-color: var(--accent);
       margin: 30px 0;
-    }
-
-    footer {
-      margin-top: 60px;
-      font-size: 0.9rem;
-      opacity: 0.8;
     }
 
     .nav {
@@ -82,7 +63,16 @@
     .nav span {
       margin-right: 20px;
       color: var(--accent);
-      cursor: default;
+    }
+
+    .hero {
+      margin-top: 30px;
+      margin-bottom: 40px;
+      font-style: italic;
+    }
+
+    .hero strong {
+      font-style: normal;
     }
 
     .prompt::before {
@@ -90,9 +80,10 @@
       color: var(--accent);
     }
 
-    .intro {
-      font-style: italic;
-      opacity: 0.95;
+    footer {
+      margin-top: 60px;
+      font-size: 0.9rem;
+      opacity: 0.8;
     }
   </style>
 </head>
@@ -111,42 +102,48 @@
       <hr>
     </header>
 
+    <!-- HERO / INTRO -->
+    <section class="hero">
+      <p>
+        <strong>The Science of Systems →</strong><br>
+        Working with Linux systems and low-level programs to grep the hidden
+        spaces looks fun — but for me, it’s about understanding why those
+        spaces exist in the first place.
+      </p>
+    </section>
+
+    <!-- ABOUT ME -->
     <section>
       <h2 class="prompt">About Me</h2>
 
-      <p class="intro">
-        <strong>The Science of Systems →</strong><br>
-        Working with Linux systems and low-level programs to grep the hidden
-        spaces looks fun — but for me, it’s about understanding why those spaces
-        exist in the first place.
-      </p>
-
-      <p>
-        I spend time exploring how systems behave beyond their documented design.
-        By breaking assumptions, tracing execution paths, and observing unintended
-        behavior, I learn how security weaknesses surface in real environments.
-      </p>
-
       <p>
         I am a Computer Science student with a focused interest in cybersecurity,
-        system internals, and low-level analysis. I regularly work on CTF challenges
-        involving reverse engineering, binary exploitation, and web security to
-        understand real-world attack surfaces.
+        system internals, and low-level analysis. My work is driven by curiosity
+        about how systems behave beyond their intended design and how security
+        weaknesses emerge from overlooked assumptions.
+      </p>
+
+      <p>
+        I regularly work on CTF challenges involving reverse engineering, binary
+        exploitation, and web security. These challenges help me understand
+        real-world attack surfaces and improve my ability to analyze software
+        at both the application and system level.
       </p>
 
       <p>
         My technical background includes Java problem solving, Python scripting,
         Linux environments, and hands-on debugging and analysis. I enjoy building
-        small tools, experimenting with ideas, and documenting what I learn through
-        notes and writeups.
+        small tools, experimenting with ideas, and documenting what I learn
+        through notes and writeups.
       </p>
 
       <p>
-        This space serves as a living record of my learning process, experiments,
-        and practical exploration in security and systems.
+        This space serves as a record of my learning process, experiments, and
+        practical exploration in security and systems.
       </p>
     </section>
 
+    <!-- ACHIEVEMENTS -->
     <section>
       <h2 class="prompt">Achievements</h2>
       <ul>
@@ -155,6 +152,7 @@
       </ul>
     </section>
 
+    <!-- CERTIFICATIONS -->
     <section>
       <h2 class="prompt">Certifications</h2>
       <ul>
@@ -164,6 +162,7 @@
       </ul>
     </section>
 
+    <!-- COMMUNITIES -->
     <section>
       <h2 class="prompt">Communities & Teams</h2>
       <ul>
@@ -173,6 +172,7 @@
       </ul>
     </section>
 
+    <!-- LANGUAGES -->
     <section>
       <h2 class="prompt">Languages</h2>
       <p>English, Tamil, Telugu</p>
