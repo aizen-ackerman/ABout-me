@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Aizen-Akerman</title>
 
   <style>
     @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap");
 
     :root {
-      --background: #1a170f;
-      --foreground: #eceae5;
+      --bg: #1a170f;
+      --fg: #eceae5;
       --accent: #eec35e;
     }
 
@@ -22,8 +22,8 @@
 
     body {
       font-family: "Fira Code", monospace;
-      background: var(--background);
-      color: var(--foreground);
+      background-color: var(--bg);
+      color: var(--fg);
       line-height: 1.6;
     }
 
@@ -33,31 +33,42 @@
       padding: 50px 20px;
     }
 
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 5px;
+    h1, h2 {
+      font-weight: 600;
+      margin-bottom: 15px;
     }
 
-    .subtitle {
-      color: var(--accent);
-      margin-bottom: 20px;
+    h1 {
+      font-size: 2rem;
     }
 
     h2 {
+      font-size: 1.3rem;
       margin-top: 40px;
-      margin-bottom: 15px;
-      font-size: 1.4rem;
     }
 
     p {
       margin-bottom: 18px;
     }
 
+    ul {
+      margin-left: 20px;
+      margin-bottom: 18px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    li::marker {
+      color: var(--accent);
+    }
+
     hr {
       border: none;
       height: 2px;
-      background: var(--accent);
-      margin: 25px 0;
+      background-color: var(--accent);
+      margin: 30px 0;
     }
 
     footer {
@@ -66,16 +77,16 @@
       opacity: 0.8;
     }
 
-    a {
+    .nav {
+      margin-bottom: 40px;
+    }
+
+    .nav span {
+      margin-right: 20px;
       color: var(--accent);
-      text-decoration: none;
+      cursor: default;
     }
 
-    a:hover {
-      text-decoration: underline;
-    }
-
-    /* Terminal feel */
     .prompt::before {
       content: "> ";
       color: var(--accent);
@@ -87,8 +98,13 @@
   <div class="container">
 
     <header>
-      <h1>Aizen-Akerman</h1>
-      <div class="subtitle">Cybersecurity • CTF • Linux Systems</div>
+      <h1>Terminal</h1>
+      <div class="nav">
+        <span>Articles</span>
+        <span>Notes</span>
+        <span>Projects</span>
+        <span>Writeups</span>
+      </div>
       <hr>
     </header>
 
@@ -96,33 +112,66 @@
       <h2 class="prompt">About Me</h2>
 
       <p>
-        I’m a passionate Computer Science student focused on Cybersecurity,
-        Linux systems, and low-level problem solving.
+        I am a Computer Science student with a focused interest in cybersecurity,
+        system internals, and low-level analysis. My work is driven by curiosity
+        about how systems behave beyond their intended design and how security
+        weaknesses emerge from overlooked assumptions.
       </p>
 
       <p>
-        I actively working on CTF challenges, security research, and hands-on
-        projects involving reverse engineering, binary analysis, and web
-        security. I prefer learning by breaking real systems, understanding
-        why they fail, and then building secure solutions.
+        I regularly work on CTF challenges involving reverse engineering, binary
+        exploitation, and web security. These challenges help me understand
+        real-world attack surfaces and improve my ability to analyze software
+        at both the application and system level.
       </p>
 
       <p>
-        I have practical experience with Java , Python and C, automation scripts,
-        and Linux-based tooling. Most of my repositories focus on security
-        utilities, learning projects, and experimental implementations
-        rather than boilerplate code.
+        My technical background includes Java problem solving, Python scripting,
+        Linux environments, and hands-on debugging and analysis. I enjoy building
+        small tools, experimenting with ideas, and documenting what I learn
+        through notes and writeups.
       </p>
 
       <p>
-        I believe in clean logic, clear documentation, and real-world
-        relevance.
+        This space serves as a record of my learning process, experiments, and
+        practical exploration in security and systems.
       </p>
+    </section>
+
+    <section>
+      <h2 class="prompt">Achievements</h2>
+      <ul>
+        <li>1st place in NIT Ethical Hacking</li>
+        <li>274 / 850 team rank in NahamCon Winter CTF 2025</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="prompt">Certifications</h2>
+      <ul>
+        <li>Pentesting 101 — Udemy</li>
+        <li>Linux Fundamentals — TCM Security</li>
+        <li>Vulnerability Assessment and Pentesting — Udemy</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="prompt">Communities & Teams</h2>
+      <ul>
+        <li>Active participant in Capture The Flag competitions</li>
+        <li>Experience working in team-based CTF environments</li>
+        <li>Primary focus on reverse engineering and binary exploitation</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="prompt">Languages</h2>
+      <p>English, Tamil, Telugu</p>
     </section>
 
     <footer>
       <hr>
-      <p>© 2025 Aizen-Akerman</p>
+      <p>© 2025 — Aizen-Akerman</p>
     </footer>
 
   </div>
