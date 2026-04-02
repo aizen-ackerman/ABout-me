@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="LEAKFINDER: Java-based web vulnerability scanner detecting OWASP Top 10 and information disclosure." />
+  <title>LEAKFINDER: Web Vulnerability Scanner | Aizen Ackerman</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #0a0a0a;
+      --bg-tertiary: #141414;
+      --fg-primary: #ffffff;
+      --fg-secondary: #a0a0a0;
+      --fg-muted: #666666;
+      --border: rgba(255, 255, 255, 0.1);
+      --border-hover: rgba(255, 255, 255, 0.2);
+      --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--fg-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    @media (min-width: 768px) {
+      .container { padding: 0 48px; }
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 24px 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid transparent;
+      transition: var(--transition);
+    }
+
+    nav.scrolled {
+      border-bottom-color: var(--border);
+      padding: 16px 0;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--fg-primary);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-back {
+      color: var(--fg-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .nav-back:hover {
+      color: var(--fg-primary);
+    }
+
+    .article-header {
+      padding: 140px 0 60px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .breadcrumb {
+      display: flex;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--fg-muted);
+      margin-bottom: 32px;
+    }
+
+    .breadcrumb a {
+      color: var(--fg-secondary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .breadcrumb a:hover {
+      color: var(--fg-primary);
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+
+    .meta {
+      display: flex;
+      gap: 24px;
+      font-size: 0.9rem;
+      color: var(--fg-muted);
+      flex-wrap: wrap;
+    }
+
+    .article-content {
+      padding: 80px 0;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 600;
+      line-height: 1.2;
+      margin: 60px 0 24px;
+      letter-spacing: -0.01em;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 40px 0 16px;
+    }
+
+    p {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--fg-secondary);
+      margin-bottom: 20px;
+    }
+
+    p strong {
+      color: var(--fg-primary);
+      font-weight: 600;
+    }
+
+    ul, ol {
+      margin-left: 24px;
+      margin-bottom: 20px;
+    }
+
+    li {
+      margin-bottom: 12px;
+      line-height: 1.7;
+      color: var(--fg-secondary);
+    }
+
+    code {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--fg-primary);
+      font-size: 0.9em;
+      font-family: 'Monaco', 'Courier New', monospace;
+    }
+
+    pre {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 24px 0;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--fg-primary);
+    }
+
+    .note {
+      background: var(--bg-secondary);
+      border-left: 3px solid var(--fg-primary);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 24px 0;
+    }
+
+    .note p {
+      margin: 0;
+    }
+
+    .warning {
+      background: rgba(239, 68, 68, 0.05);
+      border-left: 3px solid #ef4444;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 24px 0;
+    }
+
+    .warning p {
+      margin: 0;
+    }
+
+    .toc {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 40px 0;
+    }
+
+    .toc h3 {
+      font-size: 1rem;
+      margin: 0 0 16px 0;
+    }
+
+    .toc ul {
+      margin: 0;
+      list-style: none;
+    }
+
+    .toc li {
+      margin-bottom: 8px;
+    }
+
+    .toc a {
+      color: var(--fg-secondary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .toc a:hover {
+      color: var(--fg-primary);
+    }
+
+    a {
+      color: var(--fg-primary);
+      text-decoration: underline;
+      text-decoration-color: var(--border);
+      transition: var(--transition);
+    }
+
+    a:hover {
+      text-decoration-color: var(--fg-primary);
+    }
+
+    footer {
+      padding: 80px 0 40px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .footer-links a {
+      color: var(--fg-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--fg-primary);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-bottom p {
+      font-size: 0.85rem;
+      color: var(--fg-muted);
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 0 24px; }
+      h1 { font-size: 1.8rem; }
+      h2 { font-size: 1.3rem; }
+      .article-header { padding: 100px 0 40px; }
+      .article-content { padding: 40px 0; }
+    }
+
+    ::selection {
+      background: var(--fg-primary);
+      color: var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--fg-muted);
+    }
+  </style>
+</head>
+<body>
+  <nav id="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-logo">AIZEN_ACKERMAN</a>
+      <a href="../index.html#research" class="nav-back">← Back to Research</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <article>
+      <header class="article-header">
+        <div class="breadcrumb">
+          <a href="../index.html">home</a>
+          <span>/</span>
+          <a href="../index.html#research">research</a>
+          <span>/</span>
+          <span>leakfinder</span>
+        </div>
+        <h1>LEAKFINDER: Web Vulnerability Scanner</h1>
+        <div class="meta">
+          <span>April 2026</span>
+          <span>•</span>
+          <span>10 min read</span>
+          <span>•</span>
+          <span>Web Security • OWASP • Java</span>
+        </div>
+      </header>
+
+      <div class="article-content">
+        <div class="toc">
+          <h3>Table of Contents</h3>
+          <ul>
+            <li><a href="#intro">Introduction</a></li>
+            <li><a href="#problem">The Web Security Gap</a></li>
+            <li><a href="#architecture">Scanner Architecture</a></li>
+            <li><a href="#modules">Detection Modules</a></li>
+            <li><a href="#workflow">Scanning Workflow</a></li>
+            <li><a href="#detection">Detection Examples</a></li>
+            <li><a href="#usage">Usage & Integration</a></li>
+          </ul>
+        </div>
+
+        <h2 id="intro">Introduction</h2>
+        <p><strong>LEAKFINDER</strong> is a Java-based automated web vulnerability scanner that detects OWASP Top 10 vulnerabilities, information disclosure, and common misconfiguration patterns in web applications. It's designed to be accurate, fast, and require minimal false positives.</p>
+
+        <p>Unlike browser-based tools or heavy frameworks, LEAKFINDER operates as a standalone scanner that can be integrated into:</p>
+
+        <ul>
+          <li>CI/CD pipelines (automated testing)</li>
+          <li>Security assessments (manual penetration testing)</li>
+          <li>Bug bounty workflows (recon automation)</li>
+          <li>Scheduled audits (daily/weekly scans)</li>
+        </ul>
+
+        <div class="note">
+          <strong>Design Philosophy:</strong> LEAKFINDER prioritizes precision over coverage. It's better to find 5 real vulnerabilities than report 50 false positives.
+        </div>
+
+        <h2 id="problem">The Web Security Gap</h2>
+        <p>Web applications are a primary attack surface. According to OWASP and security research:</p>
+
+        <ul>
+          <li><strong>85% of web apps have OWASP Top 10 vulnerabilities</strong></li>
+          <li><strong>SQL Injection and XSS remain in top 3</strong> after 20 years</li>
+          <li><strong>Information disclosure</strong> is endemic (exposed configs, secrets, paths)</li>
+          <li><strong>Manual testing is slow</strong> (100+ endpoints → days of work)</li>
+        </ul>
+
+        <p>Existing tools either generate noise, miss subtle issues, require extensive setup, or don't integrate with CI/CD. LEAKFINDER fills this gap with a <strong>low-noise, high-precision scanner</strong> that integrates seamlessly into development and security workflows.</p>
+
+        <h2 id="architecture">Scanner Architecture</h2>
+        <p>LEAKFINDER is modular and layered:</p>
+
+        <h3>Layer 1: Reconnaissance</h3>
+        <p>Gather information about the target: URL enumeration, pattern extraction, technology detection, and response analysis.</p>
+
+        <h3>Layer 2: Vulnerability Detection</h3>
+        <p>Run targeted checks for specific vulnerability classes: injection attacks, XSS, CSRF, authentication issues, information disclosure, and business logic flaws.</p>
+
+        <h3>Layer 3: Validation & Reporting</h3>
+        <p>Verify findings with multiple techniques, assign CVSS-based severity scores, provide remediation guidance, and output in JSON, HTML, CLI, or SARIF formats.</p>
+
+        <h2 id="modules">Detection Modules</h2>
+
+        <h3>1. SQL Injection Detector</h3>
+        <p>Tests time-based blind SQLi, boolean-based blind SQLi, error-based SQLi, and union-based SQLi patterns.</p>
+
+        <div class="note">
+          <strong>Example:</strong> Parameter <code>id=1 AND 1=1</code> returns 100 results; <code>id=1 AND 1=2</code> returns 0 results → SQL injection confirmed.
+        </div>
+
+        <h3>2. Cross-Site Scripting (XSS) Detector</h3>
+        <p>Tests multiple XSS vectors: basic payloads, attribute-based, event handlers, and HTML entity bypass.</p>
+
+        <h3>3. Information Disclosure Detector</h3>
+        <p>Searches for exposed sensitive data: backup files, configuration files, version disclosures, source code exposure, and debug info.</p>
+
+        <h3>4. Authentication & Authorization Tester</h3>
+        <p>Tests broken session handling, authorization bypasses, authentication bypass, and CSRF token validation.</p>
+
+        <h3>5. API Security Checker</h3>
+        <p>Specific checks for RESTful/GraphQL APIs: missing authentication, overly permissive CORS, missing rate limiting, and sensitive data in responses.</p>
+
+        <h2 id="workflow">Scanning Workflow</h2>
+
+        <h3>Phase 1: Crawling (2-5 minutes)</h3>
+        <p>Spider the web application to discover all endpoints.</p>
+
+        <h3>Phase 2: Technology Detection</h3>
+        <p>Fingerprint the application stack: server, framework, frontend libraries, and database.</p>
+
+        <h3>Phase 3: Vulnerability Testing (5-15 minutes)</h3>
+        <p>Run detection modules against each endpoint with targeted checks.</p>
+
+        <h3>Phase 4: Validation & Reporting</h3>
+        <p>Confirm findings and generate output with severity scoring and remediation guidance.</p>
+
+        <h2 id="detection">Detection Examples</h2>
+
+        <h3>Example 1: SQL Injection</h3>
+        <p>Vulnerable endpoint: <code>GET /products?id=1</code></p>
+
+        <pre><code>GET /products?id=1' AND SLEEP(5)--+ HTTP/1.1
+Host: example.com</code></pre>
+
+        <p>If response takes 5+ seconds, SQL injection is confirmed. LEAKFINDER extracts database version, table names, and record counts.</p>
+
+        <h3>Example 2: XSS in User Input</h3>
+        <p>Vulnerable endpoint: <code>POST /comments</code></p>
+
+        <p>If the XSS payload appears unescaped in the response or is stored in the database, XSS is confirmed.</p>
+
+        <h3>Example 3: Information Disclosure</h3>
+        <p>LEAKFINDER finds common exposed files: .env, .git/config, backup.sql, config.json. If any return 200 OK, the file exists and contents may leak credentials, API keys, database info.</p>
+
+        <h2 id="usage">Usage & Integration</h2>
+
+        <h3>Quick Start</h3>
+        <pre><code>git clone https://github.com/aizen-ackerman/leakfinder
+cd leakfinder
+mvn clean compile
+java -jar target/leakfinder.jar --target https://example.com --output report.html
+# Open report.html in browser</code></pre>
+
+        <h3>CLI Options</h3>
+        <pre><code>--target              Target URL (required)
+--scope               Crawl scope (same-domain, subdomain, all)
+--modules             Specific modules to run (sql, xss, csrf, auth)
+--output              Output file (HTML, JSON, CSV)
+--intensity           Scan intensity (light, normal, aggressive)
+--concurrency         Number of parallel requests (default: 5)
+--depth               Crawl depth limit (default: 3)
+--timeout             Request timeout in seconds (default: 10)</code></pre>
+
+        <h3>CI/CD Integration</h3>
+        <p>Add to GitHub Actions for automated security scanning on every push or pull request.</p>
+
+        <h3>Deployment Options</h3>
+        <ul>
+          <li><strong>Standalone JAR:</strong> Run locally or in Docker</li>
+          <li><strong>Maven integration:</strong> <code>mvn leakfinder:scan</code></li>
+          <li><strong>Docker:</strong> Containerized for consistent environments</li>
+          <li><strong>REST API:</strong> HTTP endpoint for remote scanning</li>
+        </ul>
+
+        <div class="warning">
+          <strong>Legal Note:</strong> Only scan systems you own or have explicit permission to test. Unauthorized scanning violates CFAA and other laws.
+        </div>
+
+      </div>
+    </article>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-links">
+          <a href="https://github.com/aizen-ackerman">GitHub ↗</a>
+          <a href="../index.html#research">Back to Research</a>
+        </div>
+        <p style="color:var(--fg-muted); font-size:0.9rem;">© 2026 — Aizen Ackerman</p>
+      </div>
+      <div class="footer-bottom">
+        <p>Research & analysis. All systems secure.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+  </script>
+</body>
+</html>
