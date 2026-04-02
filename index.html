@@ -84,6 +84,42 @@
       color: var(--accent);
     }
 
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px dashed var(--accent);
+    }
+
+    a:hover {
+      color: var(--fg);
+      border-bottom: 1px solid var(--accent);
+    }
+
+    .blog-post {
+      background-color: rgba(238, 195, 94, 0.05);
+      border-left: 3px solid var(--accent);
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 3px;
+    }
+
+    .blog-post-title {
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .blog-post-meta {
+      font-size: 0.85rem;
+      color: #a89968;
+      margin-bottom: 8px;
+    }
+
+    .blog-post-desc {
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
     footer {
       margin-top: 60px;
       font-size: 0.9rem;
@@ -105,7 +141,7 @@
       <p>
         <strong>The Science of Systems →</strong><br>
         Working with Linux systems and low-level programs to grep the hidden
-        spaces looks fun — but for me, it’s about understanding why those
+        spaces looks fun — but for me, it's about understanding why those
         spaces exist in the first place.
       </p>
     </section>
@@ -139,6 +175,25 @@
         This space serves as a record of my learning process, experiments, and
         practical exploration in security and systems.
       </p>
+    </section>
+
+    <!-- RESEARCH & BLOG -->
+    <section>
+      <h2 class="prompt">Research & Writeups</h2>
+
+      <div class="blog-post">
+        <div class="blog-post-title">
+          <a href="blog/pqc-downgrade-attack.html">Post-Quantum Cryptography Downgrade Attack POC</a>
+        </div>
+        <div class="blog-post-meta">April 2026 • 8 min read • Cryptography, TLS, Security</div>
+        <div class="blog-post-desc">
+          Technical deep-dive into building a working exploit that demonstrates how 
+          network-layer attackers can force TLS implementations to downgrade from 
+          post-quantum key exchange (Kyber) to classical cryptography (X25519), 
+          enabling harvest-now-decrypt-later attacks.
+        </div>
+      </div>
+
     </section>
 
     <!-- ACHIEVEMENTS -->
