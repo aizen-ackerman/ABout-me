@@ -3,267 +3,1144 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aizen Ackerman</title>
-
+  <title>Aizen Ackerman | Security Researcher</title>
+  <meta name="description" content="Cybersecurity researcher specializing in CTF competitions, reverse engineering, binary exploitation, and system internals." />
+  
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap");
-
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
     :root {
-      --bg: #1a170f;
-      --fg: #eceae5;
-      --accent: #eec35e;
+      --bg-primary: #000000;
+      --bg-secondary: #0a0a0a;
+      --bg-tertiary: #141414;
+      --bg-card: #1a1a1a;
+      --fg-primary: #ffffff;
+      --fg-secondary: #a0a0a0;
+      --fg-muted: #666666;
+      --accent: #ffffff;
+      --border: rgba(255, 255, 255, 0.1);
+      --border-hover: rgba(255, 255, 255, 0.2);
+      --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
-      font-family: "Fira Code", monospace;
-      background-color: var(--bg);
-      color: var(--fg);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--fg-primary);
       line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
+    /* Typography Scale */
+    h1 { font-size: clamp(3rem, 8vw, 6rem); font-weight: 700; line-height: 1.0; letter-spacing: -0.03em; }
+    h2 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; }
+    h3 { font-size: clamp(1.25rem, 3vw, 1.75rem); font-weight: 600; line-height: 1.2; }
+    p { font-size: clamp(1rem, 1.5vw, 1.25rem); line-height: 1.7; color: var(--fg-secondary); }
+
+    /* Layout */
     .container {
-      max-width: 900px;
-      margin: auto;
-      padding: 50px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
     }
 
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 10px;
+    @media (min-width: 768px) {
+      .container { padding: 0 48px; }
     }
 
-    h2 {
-      font-size: 1.3rem;
-      margin-top: 40px;
-      margin-bottom: 15px;
-      font-weight: 600;
+    @media (min-width: 1200px) {
+      .container { padding: 0 64px; }
     }
 
-    p {
-      margin-bottom: 18px;
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 24px 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid transparent;
+      transition: var(--transition);
     }
 
-    ul {
-      margin-left: 20px;
-      margin-bottom: 18px;
+    nav.scrolled {
+      border-bottom-color: var(--border);
+      padding: 16px 0;
     }
 
-    li {
-      margin-bottom: 8px;
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    li::marker {
-      color: var(--accent);
-    }
-
-    hr {
-      border: none;
-      height: 2px;
-      background-color: var(--accent);
-      margin: 30px 0;
-    }
-
-    .hero {
-      margin-top: 30px;
-      margin-bottom: 40px;
-      font-style: italic;
-    }
-
-    .hero strong {
-      font-style: normal;
-    }
-
-    .prompt::before {
-      content: "> ";
-      color: var(--accent);
-    }
-
-    a {
-      color: var(--accent);
+    .nav-logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--fg-primary);
       text-decoration: none;
-      border-bottom: 1px dashed var(--accent);
+      letter-spacing: -0.02em;
     }
 
-    a:hover {
-      color: var(--fg);
-      border-bottom: 1px solid var(--accent);
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
     }
 
-    .blog-post {
-      background-color: rgba(238, 195, 94, 0.05);
-      border-left: 3px solid var(--accent);
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 3px;
-    }
-
-    .blog-post-title {
-      font-weight: 600;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-
-    .blog-post-meta {
-      font-size: 0.85rem;
-      color: #a89968;
-      margin-bottom: 8px;
-    }
-
-    .blog-post-desc {
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-
-    footer {
-      margin-top: 60px;
+    .nav-links a {
+      color: var(--fg-secondary);
+      text-decoration: none;
       font-size: 0.9rem;
-      opacity: 0.8;
+      font-weight: 500;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: var(--fg-primary);
+    }
+
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      cursor: pointer;
+      padding: 8px;
+      background: none;
+      border: none;
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--fg-primary);
+      transition: var(--transition);
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 32px;
+      font-size: 0.85rem;
+      color: var(--fg-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 500;
+    }
+
+    .hero-badge::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .hero h1 {
+      margin-bottom: 32px;
+      max-width: 900px;
+    }
+
+    .hero h1 span {
+      display: block;
+      color: var(--fg-muted);
+    }
+
+    .hero-description {
+      max-width: 600px;
+      margin-bottom: 48px;
+    }
+
+    .hero-description strong {
+      color: var(--fg-primary);
+      font-weight: 600;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      border-radius: 100px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--fg-primary);
+    }
+
+    .btn-primary {
+      background: var(--fg-primary);
+      color: var(--bg-primary);
+      border-color: var(--fg-primary);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(255,255,255,0.1);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--fg-primary);
+      background: rgba(255,255,255,0.05);
+    }
+
+    /* Stats Section */
+    .stats {
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 48px;
+    }
+
+    .stat-item h3 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--fg-primary);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-item p {
+      font-size: 0.95rem;
+      color: var(--fg-muted);
+      max-width: 280px;
+    }
+
+    /* Section Headers */
+    section {
+      padding: 120px 0;
+    }
+
+    .section-header {
+      margin-bottom: 64px;
+    }
+
+    .section-header h2 {
+      margin-bottom: 16px;
+    }
+
+    .section-header p {
+      max-width: 600px;
+      color: var(--fg-muted);
+    }
+
+    /* About Section */
+    .about-content {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .about-text {
+      font-size: 1.25rem;
+      line-height: 1.8;
+      color: var(--fg-secondary);
+    }
+
+    .about-text p {
+      margin-bottom: 24px;
+      font-size: inherit;
+      color: inherit;
+    }
+
+    .about-text strong {
+      color: var(--fg-primary);
+      font-weight: 600;
+    }
+
+    .highlight-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      padding: 32px;
+      border-radius: 16px;
+      margin: 32px 0;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .skill-tag {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      color: var(--fg-secondary);
+      transition: var(--transition);
+    }
+
+    .skill-tag:hover {
+      border-color: var(--fg-primary);
+      color: var(--fg-primary);
+      transform: translateY(-2px);
+    }
+
+    /* Research Cards - Horizontal Layout like Aptos */
+    .research-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .research-card {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 48px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .research-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 50%);
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .research-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+    }
+
+    .research-card:hover::before {
+      opacity: 1;
+    }
+
+    .research-content h3 {
+      color: var(--fg-primary);
+      margin-bottom: 12px;
+      font-size: 1.5rem;
+    }
+
+    .research-meta {
+      display: flex;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--fg-muted);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .research-desc {
+      color: var(--fg-secondary);
+      font-size: 1rem;
+      line-height: 1.6;
+      max-width: 600px;
+    }
+
+    .research-tags {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .research-tag {
+      font-size: 0.75rem;
+      padding: 6px 12px;
+      background: var(--bg-tertiary);
+      border-radius: 100px;
+      color: var(--fg-muted);
+      border: 1px solid var(--border);
+    }
+
+    .research-arrow {
+      width: 64px;
+      height: 64px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--fg-primary);
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+
+    .research-card:hover .research-arrow {
+      background: var(--fg-primary);
+      color: var(--bg-primary);
+      border-color: var(--fg-primary);
+      transform: rotate(-45deg);
+    }
+
+    /* Achievements - Clean List */
+    .achievements-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .achievement-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 32px;
+      padding: 32px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      transition: var(--transition);
+    }
+
+    .achievement-item:hover {
+      border-color: var(--border-hover);
+      background: var(--bg-tertiary);
+    }
+
+    .achievement-rank {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--fg-primary);
+      min-width: 80px;
+      text-align: center;
+    }
+
+    .achievement-rank span {
+      font-size: 1rem;
+      color: var(--fg-muted);
+      display: block;
+      font-weight: 500;
+    }
+
+    .achievement-content h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--fg-primary);
+      margin-bottom: 4px;
+    }
+
+    .achievement-content p {
+      font-size: 0.9rem;
+      color: var(--fg-muted);
+    }
+
+    .achievement-badge {
+      padding: 8px 16px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      color: var(--fg-secondary);
+      font-weight: 500;
+    }
+
+    /* Certifications Grid */
+    .certs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .cert-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      transition: var(--transition);
+    }
+
+    .cert-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+    }
+
+    .cert-provider {
+      font-size: 0.8rem;
+      color: var(--fg-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    .cert-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--fg-primary);
+    }
+
+    /* Communities */
+    .communities-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .community-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .community-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+    }
+
+    .community-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--bg-tertiary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .community-card h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--fg-primary);
+      margin-bottom: 8px;
+    }
+
+    .community-card p {
+      font-size: 0.9rem;
+      color: var(--fg-muted);
+    }
+
+    /* Languages */
+    .languages-container {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .lang-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 24px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      transition: var(--transition);
+    }
+
+    .lang-pill:hover {
+      border-color: var(--fg-primary);
+      background: var(--bg-tertiary);
+    }
+
+    .lang-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--fg-primary);
+      border-radius: 50%;
+    }
+
+    .lang-name {
+      font-weight: 600;
+      color: var(--fg-primary);
+    }
+
+    /* Footer */
+    footer {
+      padding: 80px 0 40px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .footer-links a {
+      color: var(--fg-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--fg-primary);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-bottom p {
+      font-size: 0.85rem;
+      color: var(--fg-muted);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 968px) {
+      .menu-toggle { display: flex; }
+      
+      .nav-links {
+        position: fixed;
+        top: 80px;
+        left: 24px;
+        right: 24px;
+        background: var(--bg-secondary);
+        flex-direction: column;
+        padding: 24px;
+        gap: 16px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: var(--transition);
+      }
+      
+      .nav-links.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .research-card {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .research-arrow {
+        width: 48px;
+        height: 48px;
+        align-self: flex-start;
+      }
+
+      .achievement-item {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 16px;
+      }
+
+      .achievement-rank {
+        min-width: auto;
+      }
+
+      .communities-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      section { padding: 80px 0; }
+    }
+
+    @media (max-width: 640px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .hero-cta {
+        flex-direction: column;
+        width: 100%;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* Animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: var(--transition-slow);
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Selection */
+    ::selection {
+      background: var(--fg-primary);
+      color: var(--bg-primary);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--fg-muted);
     }
   </style>
+<base target="_blank">
 </head>
-
 <body>
-  <div class="container">
+  <!-- Navigation -->
+  <nav id="navbar">
+    <div class="container">
+      <a href="#" class="nav-logo">AIZEN_ACKERMAN</a>
+      <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about" onclick="closeMenu()">About</a></li>
+        <li><a href="#research" onclick="closeMenu()">Research</a></li>
+        <li><a href="#achievements" onclick="closeMenu()">Achievements</a></li>
+        <li><a href="#certs" onclick="closeMenu()">Certifications</a></li>
+        <li><a href="https://github.com/aizen-ackerman" target="_blank" onclick="closeMenu()">GitHub</a></li>
+      </ul>
+    </div>
+  </nav>
 
-    <header>
-      <h1>Under the Hood</h1>
-      <hr>
-    </header>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">CTF Player • Security Researcher • System Internals</div>
+      <h1>
+        Under the Hood
+        <span>The Science of Systems</span>
+      </h1>
+      <div class="hero-description">
+        <p>
+          Working with Linux systems and low-level programs to grep the hidden spaces looks fun — but for me, it's about understanding <strong>why those spaces exist</strong> in the first place.
+        </p>
+      </div>
+      <div class="hero-cta">
+        <a href="#research" class="btn btn-primary">View Research →</a>
+        <a href="https://github.com/aizen-ackerman" target="_blank" class="btn btn-secondary">GitHub Profile ↗</a>
+      </div>
+    </div>
+  </section>
 
-    <!-- HERO / INTRO -->
-    <section class="hero">
-      <p>
-        <strong>The Science of Systems →</strong><br>
-        Working with Linux systems and low-level programs to grep the hidden
-        spaces looks fun — but for me, it's about understanding why those
-        spaces exist in the first place.
-      </p>
-    </section>
-
-    <!-- ABOUT ME -->
-    <section>
-      <h2 class="prompt">About Me</h2>
-
-      <p>
-        I am a Computer Science student with a focused interest in cybersecurity,
-        system internals, and low-level analysis. My work is driven by curiosity
-        about how systems behave beyond their intended design and how security
-        weaknesses emerge from overlooked assumptions.
-      </p>
-
-      <p>
-        I regularly work on CTF challenges involving reverse engineering, binary
-        exploitation, and web security. These challenges help me understand
-        real-world attack surfaces and improve my ability to analyze software
-        at both the application and system level.
-      </p>
-
-      <p>
-        My technical background includes Java problem solving, Python scripting,
-        Linux environments, and hands-on debugging and analysis. I enjoy building
-        small tools, experimenting with ideas, and documenting what I learn
-        through notes and writeups.
-      </p>
-
-      <p>
-        This space serves as a record of my learning process, experiments, and
-        practical exploration in security and systems.
-      </p>
-    </section>
-
-    <!-- RESEARCH & BLOG -->
-    <section>
-      <h2 class="prompt">Research & Writeups</h2>
-
-      <div class="blog-post">
-        <div class="blog-post-title">
-          <a href="blog/pqc-downgrade-attack.html">Post-Quantum Cryptography Downgrade Attack POC</a>
+  <!-- Stats Section -->
+  <section class="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item fade-in">
+          <h3>1st</h3>
+          <p>NIT Ethical Hacking Competition placement</p>
         </div>
-        <div class="blog-post-meta">April 2026 • 8 min read • Cryptography, TLS, Security</div>
-        <div class="blog-post-desc">
-          Technical deep-dive into building a working exploit that demonstrates how 
-          network-layer attackers can force TLS implementations to downgrade from 
-          post-quantum key exchange (Kyber) to classical cryptography (X25519), 
-          enabling harvest-now-decrypt-later attacks.
+        <div class="stat-item fade-in">
+          <h3>12<span style="font-size:1.5rem; color:var(--fg-muted);">/336</span></h3>
+          <p>National Level CTF 2026 team ranking</p>
+        </div>
+        <div class="stat-item fade-in">
+          <h3>3+</h3>
+          <p>Security research projects published</p>
+        </div>
+        <div class="stat-item fade-in">
+          <h3>∞</h3>
+          <p>Curiosity driven experiments in system internals</p>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="blog-post">
-        <div class="blog-post-title">
-          <a href="blog/zer0cloud.html">Zer0Cloud: AWS Misconfiguration Scanner</a>
-        </div>
-        <div class="blog-post-meta">April 2026 • 10 min read • Cloud Security, AWS, Python</div>
-        <div class="blog-post-desc">
-          Automated scanner for detecting AWS misconfigurations across S3 buckets, 
-          IAM roles, Lambda functions, and other cloud services. Built with Python 
-          and Flask to quickly audit cloud environments for exposures and provide 
-          actionable findings in minutes instead of hours.
+  <!-- About Section -->
+  <section id="about">
+    <div class="container">
+      <div class="section-header fade-in">
+        <h2>About Me</h2>
+        <p>Computer Science student exploring the depths of cybersecurity and system internals.</p>
+      </div>
+      
+      <div class="about-content fade-in">
+        <div class="about-text">
+          <p>
+            I am a Computer Science student with a focused interest in <strong>cybersecurity, system internals, and low-level analysis</strong>. My work is driven by curiosity about how systems behave beyond their intended design and how security weaknesses emerge from overlooked assumptions.
+          </p>
+          <p>
+            I regularly work on <strong>CTF challenges</strong> involving reverse engineering, binary exploitation, and web security. These challenges help me understand real-world attack surfaces and improve my ability to analyze software at both the application and system level.
+          </p>
+          
+          <div class="highlight-box">
+            <p style="margin:0; color:var(--fg-secondary);">
+              My technical background includes Java problem solving, Python scripting, Linux environments, and hands-on debugging and analysis. I enjoy building small tools, experimenting with ideas, and documenting what I learn through notes and writeups.
+            </p>
+          </div>
+          
+          <p>
+            This space serves as a record of my learning process, experiments, and practical exploration in security and systems.
+          </p>
+
+          <div class="skill-tags">
+            <span class="skill-tag">Reverse Engineering</span>
+            <span class="skill-tag">Binary Exploitation</span>
+            <span class="skill-tag">Web Security</span>
+            <span class="skill-tag">Linux Internals</span>
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">Java</span>
+            <span class="skill-tag">CTF</span>
+            <span class="skill-tag">Cryptography</span>
+          </div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="blog-post">
-        <div class="blog-post-title">
-          <a href="blog/leakfinder.html">LEAKFINDER: Web Vulnerability Scanner</a>
-        </div>
-        <div class="blog-post-meta">April 2026 • 10 min read • Web Security, OWASP, Java</div>
-        <div class="blog-post-desc">
-          Java-based automated scanner for detecting OWASP Top 10 vulnerabilities, 
-          information disclosure, and configuration flaws in web applications. 
-          Designed for low false positives and seamless CI/CD integration with 
-          detailed remediation guidance.
-        </div>
+  <!-- Research Section -->
+  <section id="research" style="background:var(--bg-secondary);">
+    <div class="container">
+      <div class="section-header fade-in">
+        <h2>Research & Writeups</h2>
+        <p>Technical deep-dives into security vulnerabilities, tools, and system analysis.</p>
       </div>
 
-    </section>
+      <div class="research-grid">
+        <a href="blog/pqc-downgrade-attack.html" class="research-card fade-in">
+          <div class="research-content">
+            <div class="research-meta">April 2026 • 8 min read</div>
+            <h3>Post-Quantum Cryptography Downgrade Attack POC</h3>
+            <p class="research-desc">
+              Technical deep-dive into building a working exploit that demonstrates how network-layer attackers can force TLS implementations to downgrade from post-quantum key exchange (Kyber) to classical cryptography (X25519), enabling harvest-now-decrypt-later attacks.
+            </p>
+            <div class="research-tags">
+              <span class="research-tag">Cryptography</span>
+              <span class="research-tag">TLS</span>
+              <span class="research-tag">Security</span>
+            </div>
+          </div>
+          <div class="research-arrow">→</div>
+        </a>
 
-    <!-- ACHIEVEMENTS -->
-    <section>
-      <h2 class="prompt">Achievements</h2>
-      <ul>
-        <li>1st place in NIT Ethical Hacking</li>
-        <li>274 / 850 team rank in NahamCon Winter CTF 2025</li>
-        <li>219 / 1359 team rank in 0xFun CTF</li>
-        <li>12 / 336 team rank in HackQuest(JMC) National Level CTF 2026</li>
-      </ul>
-    </section>
+        <a href="blog/zer0cloud.html" class="research-card fade-in">
+          <div class="research-content">
+            <div class="research-meta">April 2026 • 10 min read</div>
+            <h3>Zer0Cloud: AWS Misconfiguration Scanner</h3>
+            <p class="research-desc">
+              Automated scanner for detecting AWS misconfigurations across S3 buckets, IAM roles, Lambda functions, and other cloud services. Built with Python and Flask to quickly audit cloud environments for exposures and provide actionable findings in minutes.
+            </p>
+            <div class="research-tags">
+              <span class="research-tag">Cloud Security</span>
+              <span class="research-tag">AWS</span>
+              <span class="research-tag">Python</span>
+            </div>
+          </div>
+          <div class="research-arrow">→</div>
+        </a>
 
-    <!-- CERTIFICATIONS -->
-    <section>
-      <h2 class="prompt">Certifications</h2>
-      <ul>
-        <li>Pentesting 101 — Udemy</li>
-        <li>Linux Fundamentals — TCM Security</li>
-        <li>Vulnerability Assessment and Pentesting — Udemy</li>
-      </ul>
-    </section>
+        <a href="blog/leakfinder.html" class="research-card fade-in">
+          <div class="research-content">
+            <div class="research-meta">April 2026 • 10 min read</div>
+            <h3>LEAKFINDER: Web Vulnerability Scanner</h3>
+            <p class="research-desc">
+              Java-based automated scanner for detecting OWASP Top 10 vulnerabilities, information disclosure, and configuration flaws in web applications. Designed for low false positives and seamless CI/CD integration with detailed remediation guidance.
+            </p>
+            <div class="research-tags">
+              <span class="research-tag">Web Security</span>
+              <span class="research-tag">OWASP</span>
+              <span class="research-tag">Java</span>
+            </div>
+          </div>
+          <div class="research-arrow">→</div>
+        </a>
+      </div>
+    </div>
+  </section>
 
-    <!-- COMMUNITIES -->
-    <section>
-      <h2 class="prompt">Communities & Teams</h2>
-      <ul>
-        <li>Active participant in Capture The Flag competitions</li>
-        <li>Experience working in team-based CTF environments</li>
-        <li>Focus areas include reverse engineering and binary exploitation</li>
-      </ul>
-    </section>
+  <!-- Achievements Section -->
+  <section id="achievements">
+    <div class="container">
+      <div class="section-header fade-in">
+        <h2>Achievements</h2>
+        <p>Competition rankings and notable accomplishments in cybersecurity.</p>
+      </div>
 
-    <!-- LANGUAGES -->
-    <section>
-      <h2 class="prompt">Languages</h2>
-      <p>English, Tamil, Telugu</p>
-    </section>
+      <div class="achievements-list">
+        <div class="achievement-item fade-in">
+          <div class="achievement-rank">1<span>st</span></div>
+          <div class="achievement-content">
+            <h4>NIT Ethical Hacking Competition</h4>
+            <p>First place finish in National Institute of Technology CTF</p>
+          </div>
+          <span class="achievement-badge">🏆 Winner</span>
+        </div>
 
-    <footer>
-      <hr>
-      <p>© 2025 — Aizen-Ackerman</p>
-    </footer>
+        <div class="achievement-item fade-in">
+          <div class="achievement-rank">12<span>/336</span></div>
+          <div class="achievement-content">
+            <h4>HackQuest (JMC) National Level CTF 2026</h4>
+            <p>Top 4% placement in national cybersecurity competition</p>
+          </div>
+          <span class="achievement-badge">National</span>
+        </div>
 
-  </div>
+        <div class="achievement-item fade-in">
+          <div class="achievement-rank">274<span>/850</span></div>
+          <div class="achievement-content">
+            <h4>NahamCon Winter CTF 2025</h4>
+            <p>International CTF competition with global participants</p>
+          </div>
+          <span class="achievement-badge">International</span>
+        </div>
+
+        <div class="achievement-item fade-in">
+          <div class="achievement-rank">219<span>/1359</span></div>
+          <div class="achievement-content">
+            <h4>0xFun CTF</h4>
+            <p>Global online CTF with 1300+ competing teams</p>
+          </div>
+          <span class="achievement-badge">Global</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Certifications -->
+  <section id="certs" style="background:var(--bg-secondary);">
+    <div class="container">
+      <div class="section-header fade-in">
+        <h2>Certifications</h2>
+        <p>Professional training and verified skills.</p>
+      </div>
+
+      <div class="certs-grid fade-in">
+        <div class="cert-card">
+          <div class="cert-provider">Udemy</div>
+          <div class="cert-title">Pentesting 101</div>
+        </div>
+        <div class="cert-card">
+          <div class="cert-provider">TCM Security</div>
+          <div class="cert-title">Linux Fundamentals</div>
+        </div>
+        <div class="cert-card">
+          <div class="cert-provider">Udemy</div>
+          <div class="cert-title">Vulnerability Assessment and Pentesting</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Communities -->
+  <section id="communities">
+    <div class="container">
+      <div class="section-header fade-in">
+        <h2>Communities & Teams</h2>
+        <p>Active participation in the security community.</p>
+      </div>
+
+      <div class="communities-grid fade-in">
+        <div class="community-card">
+          <div class="community-icon">🚩</div>
+          <h4>CTF Competitions</h4>
+          <p>Active participant in Capture The Flag competitions worldwide</p>
+        </div>
+        <div class="community-card">
+          <div class="community-icon">👥</div>
+          <h4>Team Collaboration</h4>
+          <p>Experience working in team-based CTF environments</p>
+        </div>
+        <div class="community-card">
+          <div class="community-icon">🔧</div>
+          <h4>Focus Areas</h4>
+          <p>Reverse engineering and binary exploitation specialization</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Languages -->
+  <section id="languages" style="background:var(--bg-secondary); padding-bottom:60px;">
+    <div class="container">
+      <div class="section-header fade-in">
+        <h2>Languages</h2>
+        <p>Communication capabilities.</p>
+      </div>
+
+      <div class="languages-container fade-in">
+        <div class="lang-pill">
+          <span class="lang-dot"></span>
+          <span class="lang-name">English</span>
+        </div>
+        <div class="lang-pill">
+          <span class="lang-dot"></span>
+          <span class="lang-name">Tamil</span>
+        </div>
+        <div class="lang-pill">
+          <span class="lang-dot"></span>
+          <span class="lang-name">Telugu</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content fade-in">
+        <div class="footer-links">
+          <a href="https://github.com/aizen-ackerman" target="_blank">GitHub ↗</a>
+          <a href="mailto:contact@aizen-ackerman.github.io">Email ✉</a>
+          <a href="#">LinkedIn ↗</a>
+        </div>
+        <p style="color:var(--fg-muted); font-size:0.9rem;">© 2025 — Aizen-Ackerman</p>
+      </div>
+      <div class="footer-bottom">
+        <p>Built with precision and curiosity. All systems secure.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile Menu Toggle
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('active');
+    }
+
+    function closeMenu() {
+      document.getElementById('navLinks').classList.remove('active');
+    }
+
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    let lastScroll = 0;
+
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      
+      if (currentScroll > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+      
+      lastScroll = currentScroll;
+    });
+
+    // Intersection Observer for fade-in animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
 </body>
 </html>
